@@ -15,6 +15,23 @@ function updateDetails() {
 
 // _________MENU:_________
 
+const menu = document.querySelector(".menu");
+menu.addEventListener("click", showModal);
+
+const my_modal = document.querySelector("#myModal");
+const close = document.querySelector(".close");
+close.addEventListener("click", hideModal);
+
+
+function showModal() {
+    my_modal.style.display = "flex";
+}
+
+function hideModal() {
+    my_modal.style.display = "none";
+}
+
+
 
 // _________REPEAT:_________
 const repeat_icon = document.querySelector(".repeat");
@@ -31,13 +48,17 @@ function toggleRepeat() {
         case 0:
             repeat++;
             repeat_status.textContent = "1";
+            repeat_icon.style.color = "green";
             break;
         case 1:
             repeat++;
-            repeat_status.textContent = "All";
+            repeat_status.textContent = "\u{267B}";
+            repeat_icon.style.color = "green";
             break;
         case 2:
             repeat = 0;
+            repeat_status.textContent = " ";
+            repeat_icon.style.color = "unset";
             break;
     }
 }
@@ -54,8 +75,13 @@ function prevSong() {
     } else {
         track_index--;
     }
-    loadSong();
-    playPause();
+
+    if (curr_track.paused) {
+        loadSong();
+    } else {
+        loadSong();
+        playPause();
+    }
 }
 
 // _________PLAY-PAUSE:_________
@@ -67,11 +93,16 @@ let curr_track = document.createElement('audio');
 let track_index = 0;
 
 function loadSong() {
-    if (shuffle) {
-        track_index = Math.floor((Math.random() * track_list.length));
-    }
     curr_track.src = track_list[track_index].path;
     updateDetails();
+}
+
+function songEnded() {
+    if (shuffle) {
+        track_index = Math.floor((Math.random() * track_list.length));
+    } else {
+        track_index++;
+    }
 }
 
 function playPause() {
@@ -91,20 +122,39 @@ next.addEventListener("click", nextSong);
 
 
 function nextSong() {
-    if (repeat && (track_index == track_list.length - 1)) {
+    if (track_index == track_list.length - 1) {
         track_index = 0;;
     } else {
         track_index++;
     }
-    loadSong();
-    playPause();
+
+    if (curr_track.paused) {
+        loadSong();
+    } else {
+        loadSong();
+        playPause();
+    }
 }
 
 
 // _________SHUFFLE:_________
 const shuffle_icon = document.querySelector(".shuffle");
 let shuffle = false;
-shuffle_icon.addEventListener("click", toggle);
+shuffle_icon.addEventListener("click", toggleShuffle);
+
+function toggleShuffle() {
+    switch (shuffle) {
+        case false:
+            shuffle = true;
+            shuffle_icon.style.color = "green";
+            break;
+        case true:
+            shuffle = false;
+            shuffle_icon.style.color = "unset";
+            break;
+    }
+}
+
 
 
 // _________VOLUME:_________
@@ -116,15 +166,19 @@ volume_icon.addEventListener("wheel", volumeChange);
 
 
 function volumeChange(event) {
+    try {
+        let change = event.deltaY;
 
-    let change = event.deltaY;
-
-    if (change < 0) {
-        curr_track.volume += 0.1;
-    } else {
-        curr_track.volume -= 0.1;
+        if (change <= 0) {
+            curr_track.volume += 0.1;
+        } else {
+            curr_track.volume -= 0.1;
+        }
+        curr_volume.textContent = Math.floor(curr_track.volume * 11);
+    } catch (error) {
+        // Passing for now
     }
-    curr_volume.textContent = Math.floor(curr_track.volume * 11);
+
 }
 
 
@@ -133,6 +187,8 @@ function volumeChange(event) {
 // PROGRESS-BAR SECTION:
 
 // _________PROGRESS:_________
+
+const progress = document.querySelector(".progress");
 
 
 // _________TIMER:_________
