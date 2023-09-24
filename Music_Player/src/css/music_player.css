@@ -32,7 +32,6 @@ body {
 .image {
     width: 80%;
     height: 80%;
-    /* border: 1px solid black; */
     border-radius: 5px;
     background-image: url(../../image.jpg);
     background-position: center;
@@ -53,26 +52,24 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    /* margin-top: -10px; */
 }
 
 .song {
-    width: 80%;
+    width: 90%;
     text-align: center;
     color: #ffffff;
     text-transform: capitalize;
-}
-
-h2 {
-    margin: -8px;
-    padding: 0;
+    margin: 20px 0 5px 0;
 }
 
 .artist {
-    width: 70%;
+    width: 90%;
     text-align: center;
     color: #bbbbbb;
     padding-top: 5px;
     text-transform: capitalize;
+    margin: 5px 0 40px 0;
 }
 
 .progress-bar {
@@ -106,6 +103,7 @@ h2 {
     padding-right: 20px;
     padding-left: 20px;
 }
+
 
 
 .memory {
@@ -147,5 +145,11 @@ h2 {
 
 .volume {
     font-size: 15px;
+    width: 25px;
     color: #333333;
+}
+
+.volume p {
+    font-size: 12px;
+    display: inline;
 }

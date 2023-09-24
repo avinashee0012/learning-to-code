@@ -1,4 +1,12 @@
-// DETAILS SECTION
+// DETAILS 
+
+function updateDetails() {
+    const songName = document.querySelector(".song");
+    songName.textContent = track_list[track_index].name;
+
+    const artistName = document.querySelector(".artist");
+    artistName.textContent = track_list[track_index].artist;
+}
 
 
 // **************************************************************
@@ -10,9 +18,29 @@
 
 // _________REPEAT:_________
 const repeat_icon = document.querySelector(".repeat");
-let repeat = false;
-repeat_icon.addEventListener("click", toggle);
-// toggle function is yet to be coded
+const repeat_status = document.querySelector(".repeat-status");
+repeat_icon.addEventListener("click", toggleRepeat);
+
+let repeat = 0;
+// 0 => No-Repeat
+// 1 => Repeat-One
+// 2 => Repeat-All
+
+function toggleRepeat() {
+    switch (repeat) {
+        case 0:
+            repeat++;
+            repeat_status.textContent = "1";
+            break;
+        case 1:
+            repeat++;
+            repeat_status.textContent = "All";
+            break;
+        case 2:
+            repeat = 0;
+            break;
+    }
+}
 
 
 // _________PREV:_________
@@ -39,11 +67,11 @@ let curr_track = document.createElement('audio');
 let track_index = 0;
 
 function loadSong() {
-    if(shuffle) {
+    if (shuffle) {
         track_index = Math.floor((Math.random() * track_list.length));
-    } 
+    }
     curr_track.src = track_list[track_index].path;
-    console.log(track_index);
+    updateDetails();
 }
 
 function playPause() {
@@ -78,15 +106,28 @@ const shuffle_icon = document.querySelector(".shuffle");
 let shuffle = false;
 shuffle_icon.addEventListener("click", toggle);
 
+
 // _________VOLUME:_________
+const volume_icon = document.querySelector(".volume");
+const curr_volume = document.querySelector(".curr-volume");
+
+curr_track.volume = 0.20;
+volume_icon.addEventListener("wheel", volumeChange);
 
 
+function volumeChange(event) {
 
+    let change = event.deltaY;
 
-
-function toggle() {
-    // Algo yet to be coded
+    if (change < 0) {
+        curr_track.volume += 0.1;
+    } else {
+        curr_track.volume -= 0.1;
+    }
+    curr_volume.textContent = Math.floor(curr_track.volume * 11);
 }
+
+
 
 // **************************************************************
 // PROGRESS-BAR SECTION:
