@@ -9,7 +9,7 @@ function updateDetails() {
 }
 
 
-// **************************************************************
+// ****************************************************************************************************************************
 // CONTROLS SECTION
 
 
@@ -95,15 +95,10 @@ let track_index = 0;
 function loadSong() {
     curr_track.src = track_list[track_index].path;
     updateDetails();
+
+    curr_track.addEventListener("ended", autoNext);
 }
 
-function songEnded() {
-    if (shuffle) {
-        track_index = Math.floor((Math.random() * track_list.length));
-    } else {
-        track_index++;
-    }
-}
 
 function playPause() {
     if (!curr_track.paused) {
@@ -112,6 +107,7 @@ function playPause() {
     } else {
         play_pause.innerHTML = "<i class=\"fa fa-pause-circle-o\"></i>";
         loadSong();
+        setInterval(progressTrack, 500);
         curr_track.play();
     }
 }
@@ -136,6 +132,16 @@ function nextSong() {
     }
 }
 
+function autoNext() {
+    if (track_index == track_list.length - 1) {
+        track_index = 0;;
+    } else {
+        track_index++;
+    }
+
+    loadSong();
+    playPause();
+}
 
 // _________SHUFFLE:_________
 const shuffle_icon = document.querySelector(".shuffle");
@@ -183,18 +189,51 @@ function volumeChange(event) {
 
 
 
-// **************************************************************
+// ****************************************************************************************************************************
 // PROGRESS-BAR SECTION:
 
-// _________PROGRESS:_________
 
-const progress = document.querySelector(".progress");
+let progress = document.querySelector(".progress");
+
+function progressTrack() {
+    if (!isNaN(curr_track.duration)) {
+
+        // _________PROGRESS:_________
+        time = Math.floor(100 * curr_track.currentTime / curr_track.duration + 0.5) + "%";
+        console.log(time);
+        progress.style.width = time;
+        progress.style.background = "linear-gradient(#00f7ffaf, rgb(11, 180, 247), #00f7ffaf)";
+
+        // _________TIMER:_________
+        let current = document.querySelector(".current");
+        let total = document.querySelector(".total");
+
+        let currentMin = Math.floor(curr_track.currentTime/ 60) ;
+        let currentSec = Math.floor(curr_track.currentTime) - (currentMin * 60);
+        let totalMin = Math.floor(curr_track.duration/ 60);
+        let totalSec = Math.floor(curr_track.duration) - (totalMin * 60);
+
+        if (currentMin < 10) {
+            currentMin =  "0" + currentMin;
+        }
+        if (currentSec < 10) {
+            currentSec = "0" + currentSec;
+        }
+        if (totalMin < 10) {
+            totalMin = "0" + totalMin;
+        }
+        if (totalSec < 10) {
+            totalSec = "0" + totalSec;
+        }
+
+        current.textContent = currentMin + ":" + currentSec;
+        total.textContent = totalMin + ":" + totalSec;
+    }
+
+}
 
 
-// _________TIMER:_________
-
-
-// **************************************************************
+// ****************************************************************************************************************************
 // MODAL SECTION:
 
 
