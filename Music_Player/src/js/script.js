@@ -1,16 +1,19 @@
 // DETAILS 
 
 function updateDetails() {
+    console.log("Entered Details");
     const songName = document.querySelector(".song");
     songName.textContent = track_list[track_index].name;
 
     const artistName = document.querySelector(".artist");
     artistName.textContent = track_list[track_index].artist;
+    console.log("Exited Details");
 }
 
 
 // ****************************************************************************************************************************
 // CONTROLS SECTION
+let memory = [];
 
 
 // _________MENU:_________
@@ -71,7 +74,7 @@ prev.addEventListener("click", prevSong);
 
 function prevSong() {
     if (track_index == 0) {
-        track_index = track_list.length - 1;;
+        track_index = track_list.length - 1;
     } else {
         track_index--;
     }
@@ -107,7 +110,7 @@ function playPause() {
     } else {
         play_pause.innerHTML = "<i class=\"fa fa-pause-circle-o\"></i>";
         loadSong();
-        setInterval(progressTrack, 500);
+        setInterval(progressTrack, 1000);
         curr_track.play();
     }
 }
@@ -176,8 +179,10 @@ function volumeChange(event) {
         let change = event.deltaY;
 
         if (change <= 0) {
+            event.preventDefault();
             curr_track.volume += 0.1;
         } else {
+            event.preventDefault();
             curr_track.volume -= 0.1;
         }
         curr_volume.textContent = Math.floor(curr_track.volume * 11);
@@ -200,7 +205,6 @@ function progressTrack() {
 
         // _________PROGRESS:_________
         time = Math.floor(100 * curr_track.currentTime / curr_track.duration + 0.5) + "%";
-        console.log(time);
         progress.style.width = time;
         progress.style.background = "linear-gradient(#00f7ffaf, rgb(11, 180, 247), #00f7ffaf)";
 
@@ -208,13 +212,13 @@ function progressTrack() {
         let current = document.querySelector(".current");
         let total = document.querySelector(".total");
 
-        let currentMin = Math.floor(curr_track.currentTime/ 60) ;
+        let currentMin = Math.floor(curr_track.currentTime / 60);
         let currentSec = Math.floor(curr_track.currentTime) - (currentMin * 60);
-        let totalMin = Math.floor(curr_track.duration/ 60);
+        let totalMin = Math.floor(curr_track.duration / 60);
         let totalSec = Math.floor(curr_track.duration) - (totalMin * 60);
 
         if (currentMin < 10) {
-            currentMin =  "0" + currentMin;
+            currentMin = "0" + currentMin;
         }
         if (currentSec < 10) {
             currentSec = "0" + currentSec;
@@ -237,4 +241,117 @@ function progressTrack() {
 // MODAL SECTION:
 
 
+// ______________CATEGORY______________
+let category = document.querySelector(".category");
 
+track_list.forEach(x => {
+    const button = document.createElement("button");
+    const span = document.createElement("span");
+
+    button.textContent = x["category"];
+    button.setAttribute("type", "button");
+    button.setAttribute("class", "category-btn");
+    button.onclick = function () {
+        generateList(x.category);
+    }
+
+    span.innerHTML = "<i class=\"fa\">&#xf04b;</i>";
+    span.setAttribute("class", "play-category");
+    span.onclick = function () {
+        generatePlaylist(x.category);
+    }
+
+    button.appendChild(span);
+    category.appendChild(button);
+})
+
+// Show a "play" button when hovered on each button above to be able to play whole category
+
+// ______________LIST______________
+let list = document.querySelector(".list");
+
+function generateList(category) {
+    track_list.forEach(x => {
+        if (x.category === category) {
+            while (list.firstChild) {
+                list.removeChild(list.firstChild);
+            }
+            x.content.forEach(y => {
+                const button = document.createElement("button");
+                button.textContent = y.name;
+                button.setAttribute("type", "button");
+                button.setAttribute("class", "list-btn");
+                list.appendChild(button);
+            })
+        }
+    })
+}
+
+// Show a "play" button when hovered on each button above to be able to play 
+
+// ______________EXTRA______________
+
+// ______________PLAYLIST______________
+let modal_playlist = document.querySelector(".playlist");
+let body_playlist = document.querySelector("#playlist");
+let count = 0;
+
+function generatePlaylist(category) {
+    track_list.forEach(x => {
+        if (x.category === category) {
+            console.log(memory);
+            x.content.forEach(y => {
+                
+                memory.push()
+                const button1 = document.createElement("button");
+                button1.textContent = y.name;
+                button1.setAttribute("type", "button");
+                modal_playlist.appendChild(button1);
+
+                let button2 = document.createElement("button");
+                button2.textContent = y.name;
+                button2.setAttribute("type", "button");
+                body_playlist.appendChild(button2);
+                count++;
+            })
+            localStorage.memory = JSON.stringify(memory);
+        }
+    })
+    showAlert("Added category to playlist. Playlist has " + count + " songs now.");
+}
+
+
+
+window.onload = function () {
+    if (localStorage.memory) {
+        memory = [];
+        memory = JSON.parse(localStorage.memory);
+        fetchLocalStorage();
+    } else {
+        memory = [];
+        localStorage.playlist = JSON.stringify(memory);
+        fetchLocalStorage();
+    }
+}
+
+function fetchLocalStorage() {
+    memory.forEach(y => {
+        const button = document.createElement("button");
+        button.textContent = y.name;
+        button.setAttribute("type", "button");
+        body_playlist.appendChild(button);
+    })
+}
+
+
+// __________ALERT FUNCTION_________________
+function showAlert(string_inp) {
+    close.textContent = string_inp;
+    close.style.color = "green";
+    setTimeout(setBack, 3000);
+}
+
+function setBack() {
+    close.style.color = "red";
+    close.innerHTML = "<i class=\"fa fa-window-close-o\"></i>";
+}

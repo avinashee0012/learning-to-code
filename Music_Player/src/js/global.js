@@ -5,7 +5,13 @@
 // ************************************************************************
 // ALERT NOTIFICATION
 
+// const alert_message = document.querySelector (".alert-message");
+// let alert = document.querySelector("#alert");
 
+// alert_message.textContent = "This is an alert message!";
+
+// alert_message.style.display = "inline-block";
+// alert.style.visibility = "visible";
 
 // ************************************************************************
 // DISABLE A FEATURE COMPLETELY

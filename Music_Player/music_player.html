@@ -8,21 +8,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="icon.png" type="image/x-icon">
     <link rel="stylesheet" href="./src/css/music_player.css">
+    <link rel="stylesheet" href="./songs/Test/1.mp3">
+
     <style>
 
     </style>
 </head>
 
 <body>
-    <div class="container">
+    <div id="#" class="container">
         <div class="image-container">
             <div class="image"></div>
         </div>
         <div class="details">
-            <h2 class="song"></h2>
+            <p class="song"></p>
             <p class="artist"></p>
         </div>
-        <div class="progress-bar">
+        <div class="progress-bar ">
             <div class="progress"></div>
             <div class="timer"><span class="current">00:00</span><span class="total">00:00</span></div>
         </div>
@@ -36,48 +38,27 @@
             <div class="volume"><i class="fa fa-volume-up"><p class="curr-volume">2</p></i></div>
         </div>
     </div>
-
-
+    <div><i class="fa fa-angle-double-down" title="There is more below!"></i></div>
+    <div id="playlist">
+    </div>
+    <div><a href="#"><button class="back-to-top">Top <i class="fa fa-angle-double-up"></i></button></a></div>
 
     <!-- MODAL -->
     <div id="myModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="alert-message">Alert Message Here</div>
+            <span class="close"><i class="fa fa-window-close-o"></i></span>
+            <div class="alert-message"></div>
             <div class="modal-container">
                 <div class="main-list">
                     <div class="category">
-                        <button type="button" class="category-btn"><span class="category-name">category-name</span><span class="add-category">+</span></button>
-                        <button type="button" class="category-btn"><span class="category-name">category-name</span><span class="add-category">+</span></button>
-                        <button type="button" class="category-btn"><span class="category-name">category-name</span><span class="add-category">+</span></button>
-                        <button type="button" class="category-btn"><span class="category-name">category-name</span><span class="add-category">+</span></button>
-                        <button type="button" class="category-btn"><span class="category-name">category-name</span><span class="add-category">+</span></button>
-                        <button type="button" class="category-btn"><span class="category-name">category-name</span><span class="add-category">+</span></button>
-                        <button type="button" class="category-btn"><span class="category-name">category-name</span><span class="add-category">+</span></button>
-                        <button type="button" class="category-btn"><span class="category-name">category-name</span><span class="add-category">+</span></button>
-                        <button type="button" class="category-btn"><span class="category-name">category-name</span><span class="add-category">+</span></button>
-                        <button type="button" class="category-btn"><span class="category-name">category-name</span><span class="add-category">+</span></button>
-                        <button type="button" class="category-btn"><span class="category-name">category-name</span><span class="add-category">+</span></button>
-                        <button type="button" class="category-btn"><span class="category-name">category-name</span><span class="add-category">+</span></button>
+                        <!-- <button  class="category-btn"><span class="play-category">+</span></button> -->
                     </div>
-                    <div class="list"></div>
-                        <button type="button" class="list-btn"><span class="song-name">song-name</span><span class="add-song">+</span></button>
-                        <button type="button" class="list-btn"><span class="song-name">song-name</span><span class="add-song">+</span></button>
-                        <button type="button" class="list-btn"><span class="song-name">song-name</span><span class="add-song">+</span></button>
-                        <button type="button" class="list-btn"><span class="song-name">song-name</span><span class="add-song">+</span></button>
-                        <button type="button" class="list-btn"><span class="song-name">song-name</span><span class="add-song">+</span></button>
-                        <button type="button" class="list-btn"><span class="song-name">song-name</span><span class="add-song">+</span></button>
-
+                    <div class="list">
+                        <!-- <button type="button" class="list-btn"><span class="add-song">+</span></button> -->
+                    </div>
                 </div>
-                <div class="extra"></div>
                 <div class="playlist">
-                    <button type="button" class="playlist-btn"><span class="playlist-song-name">playlist-song-name</span><span class="remove-song">+</span></button>
-                    <button type="button" class="playlist-btn"><span class="playlist-song-name">playlist-song-name</span><span class="remove-song">+</span></button>
-                    <button type="button" class="playlist-btn"><span class="playlist-song-name">playlist-song-name</span><span class="remove-song">+</span></button>
-                    <button type="button" class="playlist-btn"><span class="playlist-song-name">playlist-song-name</span><span class="remove-song">+</span></button>
-                    <button type="button" class="playlist-btn"><span class="playlist-song-name">playlist-song-name</span><span class="remove-song">+</span></button>
-                    <button type="button" class="playlist-btn"><span class="playlist-song-name">playlist-song-name</span><span class="remove-song">+</span></button>
-                    <button type="button" class="playlist-btn"><span class="playlist-song-name">playlist-song-name</span><span class="remove-song">+</span></button>
+                    <!-- <button type="button" class="playlist-btn"><span class="playlist-song-name">playlist-song-name</span><span class="remove-song">-</span></button> -->
                 </div>
             </div>
         </div>
