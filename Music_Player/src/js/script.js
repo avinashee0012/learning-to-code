@@ -1,3 +1,37 @@
+// INITIAL SETUP
+
+let object = [
+    {
+        status: true,
+        playlist: [],
+        isPlaying: false,
+        volume: 0.2,
+        repeat: 0,
+        shuffle: false
+    }
+]
+
+window.onload = function localStorageFetch() {
+    if (localStorage.status) {
+        object[0].status = localStorage.status;
+        object[0].playlist = JSON.parse(localStorage.playlist);
+        object[0].isPlaying = localStorage.isPlaying;
+        object[0].volume = localStorage.volume;
+        object[0].repeat = localStorage.repeat;
+        object[0].shuffle = localStorage.shuffle;
+    } else {
+        localStorage.status = object[0].status;
+        localStorage.playlist = object[0].playlist;
+        localStorage.isPlaying = object[0].isPlaying;
+        localStorage.volume = object[0].volume;
+        localStorage.repeat = object[0].repeat;
+        localStorage.shuffle = object[0].shuffle;
+    }
+
+    generatePlaylist();
+}
+
+
 // DETAILS 
 
 function updateDetails() {
@@ -13,7 +47,7 @@ function updateDetails() {
 
 // ****************************************************************************************************************************
 // CONTROLS SECTION
-let memory = [];
+
 
 
 // _________MENU:_________
@@ -35,36 +69,35 @@ function hideModal() {
 }
 
 
-
 // _________REPEAT:_________
-const repeat_icon = document.querySelector(".repeat");
-const repeat_status = document.querySelector(".repeat-status");
-repeat_icon.addEventListener("click", toggleRepeat);
+// const repeat_icon = document.querySelector(".repeat");
+// const repeat_status = document.querySelector(".repeat-status");
+// repeat_icon.addEventListener("click", toggleRepeat);
 
-let repeat = 0;
-// 0 => No-Repeat
-// 1 => Repeat-One
-// 2 => Repeat-All
+// let repeat = 0;
+// // 0 => No-Repeat
+// // 1 => Repeat-One
+// // 2 => Repeat-All
 
-function toggleRepeat() {
-    switch (repeat) {
-        case 0:
-            repeat++;
-            repeat_status.textContent = "1";
-            repeat_icon.style.color = "green";
-            break;
-        case 1:
-            repeat++;
-            repeat_status.textContent = "\u{267B}";
-            repeat_icon.style.color = "green";
-            break;
-        case 2:
-            repeat = 0;
-            repeat_status.textContent = " ";
-            repeat_icon.style.color = "unset";
-            break;
-    }
-}
+// function toggleRepeat() {
+//     switch (repeat) {
+//         case 0:
+//             repeat++;
+//             repeat_status.textContent = "1";
+//             repeat_icon.style.color = "green";
+//             break;
+//         case 1:
+//             repeat++;
+//             repeat_status.textContent = "\u{267B}";
+//             repeat_icon.style.color = "green";
+//             break;
+//         case 2:
+//             repeat = 0;
+//             repeat_status.textContent = " ";
+//             repeat_icon.style.color = "unset";
+//             break;
+//     }
+// }
 
 
 // _________PREV:_________
@@ -147,22 +180,22 @@ function autoNext() {
 }
 
 // _________SHUFFLE:_________
-const shuffle_icon = document.querySelector(".shuffle");
-let shuffle = false;
-shuffle_icon.addEventListener("click", toggleShuffle);
+// const shuffle_icon = document.querySelector(".shuffle");
+// let shuffle = false;
+// shuffle_icon.addEventListener("click", toggleShuffle);
 
-function toggleShuffle() {
-    switch (shuffle) {
-        case false:
-            shuffle = true;
-            shuffle_icon.style.color = "green";
-            break;
-        case true:
-            shuffle = false;
-            shuffle_icon.style.color = "unset";
-            break;
-    }
-}
+// function toggleShuffle() {
+//     switch (shuffle) {
+//         case false:
+//             shuffle = true;
+//             shuffle_icon.style.color = "green";
+//             break;
+//         case true:
+//             shuffle = false;
+//             shuffle_icon.style.color = "unset";
+//             break;
+//     }
+// }
 
 
 
@@ -258,7 +291,7 @@ track_list.forEach(x => {
     span.innerHTML = "<i class=\"fa\">&#xf04b;</i>";
     span.setAttribute("class", "play-category");
     span.onclick = function () {
-        generatePlaylist(x.category);
+        categoryToPlaylist(x.category);
     }
 
     button.appendChild(span);
@@ -294,64 +327,37 @@ function generateList(category) {
 // ______________PLAYLIST______________
 let modal_playlist = document.querySelector(".playlist");
 let body_playlist = document.querySelector("#playlist");
-let count = 0;
 
-function generatePlaylist(category) {
+function categoryToPlaylist(category) {
     track_list.forEach(x => {
         if (x.category === category) {
-            console.log(memory);
             x.content.forEach(y => {
-                
-                memory.push()
-                const button1 = document.createElement("button");
-                button1.textContent = y.name;
-                button1.setAttribute("type", "button");
-                modal_playlist.appendChild(button1);
-
-                let button2 = document.createElement("button");
-                button2.textContent = y.name;
-                button2.setAttribute("type", "button");
-                body_playlist.appendChild(button2);
-                count++;
+                object[0].playlist.push(y);
             })
-            localStorage.memory = JSON.stringify(memory);
+            localStorage.playlist = JSON.stringify(object[0].playlist);
         }
-    })
-    showAlert("Added category to playlist. Playlist has " + count + " songs now.");
+    }) 
+    generatePlaylist();
 }
 
+function generatePlaylist() {
+    object[0].playlist.forEach(x => {
+        const button1 = document.createElement("button");
+        button1.textContent = x.name;
+        button1.setAttribute("type", "button");
+        
+        modal_playlist.appendChild(button1);
 
-
-window.onload = function () {
-    if (localStorage.memory) {
-        memory = [];
-        memory = JSON.parse(localStorage.memory);
-        fetchLocalStorage();
-    } else {
-        memory = [];
-        localStorage.playlist = JSON.stringify(memory);
-        fetchLocalStorage();
-    }
-}
-
-function fetchLocalStorage() {
-    memory.forEach(y => {
-        const button = document.createElement("button");
-        button.textContent = y.name;
-        button.setAttribute("type", "button");
-        body_playlist.appendChild(button);
+        let button2 = document.createElement("button");
+        button2.textContent = x.name;
+        button2.setAttribute("type", "button");
+        body_playlist.appendChild(button2);
     })
 }
 
-
-// __________ALERT FUNCTION_________________
-function showAlert(string_inp) {
-    close.textContent = string_inp;
-    close.style.color = "green";
-    setTimeout(setBack, 3000);
+function clearPlaylist() {
+    object[0].playlist = [];
+    localStorage.playlist = [];
 }
 
-function setBack() {
-    close.style.color = "red";
-    close.innerHTML = "<i class=\"fa fa-window-close-o\"></i>";
-}
+
