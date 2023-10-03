@@ -7,7 +7,7 @@ let object = [
         current_time: 0,
         isPlaying: false,
         volume: 0.2,
-        alert_read: true,
+        alert_read: false,
         // repeat: 0,
         // shuffle: false
     }
@@ -51,6 +51,7 @@ window.onload = function localStorageFetch() {
     }
 
     generatePlaylist();
+
 }
 
 if (localStorage.alert_read) {
@@ -91,7 +92,6 @@ close.addEventListener("click", hideModal);
 
 function showModal() {
     my_modal.style.display = "flex";
-
 }
 
 function hideModal() {
@@ -100,40 +100,42 @@ function hideModal() {
 
 
 // _________REPEAT:_________
-// const repeat_icon = document.querySelector(".repeat");
-// const repeat_status = document.querySelector(".repeat-status");
-// repeat_icon.addEventListener("click", toggleRepeat);
 
-// let repeat = 0;
-// // 0 => No-Repeat
-// // 1 => Repeat-One
-// // 2 => Repeat-All
-
-// function toggleRepeat() {
-//     switch (repeat) {
-//         case 0:
-//             repeat++;
-//             repeat_status.textContent = "1";
-//             repeat_icon.style.color = "green";
-//             break;
-//         case 1:
-//             repeat++;
-//             repeat_status.textContent = "\u{267B}";
-//             repeat_icon.style.color = "green";
-//             break;
-//         case 2:
-//             repeat = 0;
-//             repeat_status.textContent = " ";
-//             repeat_icon.style.color = "unset";
-//             break;
-//     }
-// }
+function repeatAlgo() {
+    const repeat_icon = document.querySelector(".repeat");
+    const repeat_status = document.querySelector(".repeat-status");
+    repeat_icon.addEventListener("click", toggleRepeat);
+    
+    let repeat = 0;
+    // 0 => No-Repeat
+    // 1 => Repeat-One
+    // 2 => Repeat-All
+    
+    function toggleRepeat() {
+        switch (repeat) {
+            case 0:
+                repeat++;
+                repeat_status.textContent = "1";
+                repeat_icon.style.color = "green";
+                break;
+            case 1:
+                repeat++;
+                repeat_status.textContent = "\u{267B}";
+                repeat_icon.style.color = "green";
+                break;
+            case 2:
+                repeat = 0;
+                repeat_status.textContent = " ";
+                repeat_icon.style.color = "unset";
+                break;
+        }
+    }
+}
 
 
 // _________PREV:_________
 let prev = document.querySelector(".prev");
 prev.addEventListener("click", prevSong);
-
 
 function prevSong() {
     if (track_index == 0) {
@@ -185,7 +187,6 @@ function playPause() {
 let next = document.querySelector(".next");
 next.addEventListener("click", nextSong);
 
-
 function nextSong() {
     if (track_index == object[0].playlist.length - 1) {
         track_index = 0;
@@ -217,23 +218,25 @@ function autoNext() {
 }
 
 // _________SHUFFLE:_________
-// const shuffle_icon = document.querySelector(".shuffle");
-// let shuffle = false;
-// shuffle_icon.addEventListener("click", toggleShuffle);
 
-// function toggleShuffle() {
-//     switch (shuffle) {
-//         case false:
-//             shuffle = true;
-//             shuffle_icon.style.color = "green";
-//             break;
-//         case true:
-//             shuffle = false;
-//             shuffle_icon.style.color = "unstatusset";
-//             break;
-//     }
-// }
-
+function shuffleAlgo() {
+    const shuffle_icon = document.querySelector(".shuffle");
+    let shuffle = false;
+    shuffle_icon.addEventListener("click", toggleShuffle);
+    
+    function toggleShuffle() {
+        switch (shuffle) {
+            case false:
+                shuffle = true;
+                shuffle_icon.style.color = "green";
+                break;
+            case true:
+                shuffle = false;
+                shuffle_icon.style.color = "unstatusset";
+                break;
+        }
+    }
+}
 
 
 // _________VOLUME:_________
@@ -264,10 +267,8 @@ function volumeChange(event) {
 }
 
 
-
 // ****************************************************************************************************************************
 // PROGRESS-BAR SECTION:
-
 
 let progress = document.querySelector(".progress");
 
@@ -275,7 +276,7 @@ function progressTrack() {
     if (!isNaN(curr_track.duration)) {
 
         // _________PROGRESS:_________
-        let time = Math.floor(100 * curr_track.currentTime / curr_track.duration + 0.5);
+        let time = Math.floor(100 * curr_track.currentTime / curr_track.duration);
         let time_perc = time + "%";
 
         progress.style.width = time_perc;
@@ -315,11 +316,8 @@ function progressTrack() {
 }
 
 
-
-
 // ****************************************************************************************************************************
 // MODAL SECTION:
-
 
 
 // ______________CATEGORY______________
@@ -357,9 +355,7 @@ let list = document.querySelector(".list");
 function generateList(category) {
     track_list.forEach(x => {
         if (x.category === category) {
-            while (list.firstChild) {
-                list.removeChild(list.firstChild);
-            }
+            clearAllButtons(list);
             x.content.forEach(y => {
                 const div = document.createElement("div");
                 div.setAttribute("class", "btn-container");
@@ -370,8 +366,6 @@ function generateList(category) {
                 button1.setAttribute("class", "name");
                 button1.onclick = function () {
                     addToPlaylist(y);
-                    track_index = JSON.parse(localStorage.playlist).length - 1;
-                    playPause();
                 }
 
                 const button2 = document.createElement("button");
@@ -388,7 +382,6 @@ function generateList(category) {
     })
 }
 
-
 // ______________EXTRA______________
 
 // ______________PLAYLIST______________
@@ -396,16 +389,15 @@ let modal_playlist = document.querySelector(".playlist");
 let body_playlist = document.querySelector("#playlist");
 
 function addToPlaylist(category) {
-    while (modal_playlist.firstChild) {
-        modal_playlist.removeChild(modal_playlist.firstChild);
-    }
-    while (body_playlist.firstChild) {
-        body_playlist.removeChild(body_playlist.firstChild);
-    }
+    clearAllButtons(body_playlist);
+    clearAllButtons(modal_playlist);
+    
+    // if adding just a song object to playlist 
     if (typeof (category) == "object") {
         object[0].playlist.push(category);
         localStorage.playlist = JSON.stringify(object[0].playlist);
     } else {
+        // if adding whole category to playlist
         track_list.forEach(x => {
             if (x.category === category) {
                 x.content.forEach(y => {
@@ -419,12 +411,35 @@ function addToPlaylist(category) {
 }
 
 
-
 // generate the playlist buttons for items in playlist array
 function generatePlaylist() {
+    createClearPlaylistButton();
+    createPlaylistButtons();
+}
+
+function removeFromPlaylist(song, index) {
+    console.log("x: " + song.name + " index: " + index);
+    object[0].playlist.splice(index, 1);
+
+    clearAllButtons(body_playlist);
+    clearAllButtons(modal_playlist);
+
+    createClearPlaylistButton();
+    createPlaylistButtons();
+}
+
+function clearAllButtons(element) {
+    while (element.firstChild) {
+        element.removeChild(element.firstChild);
+    }
+}
+
+function createClearPlaylistButton() {
+
+    const playlist_length = (JSON.parse(localStorage.playlist)).length;
 
     const button = document.createElement("button");
-    button.textContent = "Clear Playlist";
+    button.textContent = "Clear Playlist (" + playlist_length + " songs)";
     button.setAttribute("class", "clear-playlist-button");
     button.style.justifyContent = "center";
     button.addEventListener("click", clearPlaylist);
@@ -435,65 +450,10 @@ function generatePlaylist() {
     if (object[0].playlist.length == 0 || JSON.parse(localStorage.playlist).length == 0) {
         clear_playlist.style.display = "none";
     }
-
-    object[0].playlist.forEach(x => {
-        const div = document.createElement("div");
-        div.setAttribute("class", "btn-container");
-
-        const button1 = document.createElement("button");
-        button1.textContent = x.name;
-        button1.setAttribute("type", "button");
-        button1.setAttribute("class", "name");
-
-        button1.onclick = function () {
-            track_index = object[0].playlist.indexOf(x);
-            playPause();
-        }
-
-        const button2 = document.createElement("button");
-        button2.innerHTML = "<i class=\"fa fa-remove\"></i>";
-        button2.setAttribute("class", "action");
-        button2.onclick = function () {
-            removeFromPlaylist(x, object[0].playlist.indexOf(x));
-        }
-        div.appendChild(button1);
-        div.appendChild(button2);
-        modal_playlist.appendChild(div);
-
-        const button3 = document.createElement("button");
-        button3.textContent = x.name;
-        button3.setAttribute("class", "name");
-        button3.style.textAlign = "center";
-        button3.onclick = function () {
-            track_index = object[0].playlist.indexOf(x);
-            playPause();
-        }
-
-        body_playlist.appendChild(button3);
-
-    })
 }
 
-function removeFromPlaylist(song, index) {
-    console.log("x: " + song + " index: " + index);
-    object[0].playlist.splice(index, 1);
-    localStorage.playlist = JSON.stringify(object[0].playlist);
-
-    while (modal_playlist.firstChild) {
-        modal_playlist.removeChild(modal_playlist.firstChild);
-    }
-    while (body_playlist.firstChild) {
-        body_playlist.removeChild(body_playlist.firstChild);
-    }
-
-    const button = document.createElement("button");
-    button.textContent = "Clear Playlist";
-    button.setAttribute("class", "clear-playlist-button");
-    button.style.justifyContent = "center";
-    button.addEventListener("click", clearPlaylist);
-    modal_playlist.appendChild(button);
-
-    object[0].playlist.forEach(x => {
+function createPlaylistButtons() {
+    (JSON.parse(localStorage.playlist)).forEach(x => {
         const div = document.createElement("div");
         div.setAttribute("class", "btn-container");
 
@@ -524,13 +484,14 @@ function removeFromPlaylist(song, index) {
 function clearPlaylist() {
     let text = "Pressing OK will clear you playlist!";
     if (confirm(text) == true) {
-        text = object[0].playlist = [];
+        object[0].playlist = [];
         localStorage.playlist = [];
-        location.reload();
-    } else {
-        text = "";
-    }
+        clearAllButtons(modal_playlist);
+        clearAllButtons(body_playlist);
+        createPlaylistButtons();
+    } 
 }
+
 
 const back_to_top = document.querySelector(".back-to-top");
 
