@@ -3,16 +3,11 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Music Player</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" href="icon.png" type="image/x-icon">
     <link rel="stylesheet" href="./src/css/music_player.css">
-    <link rel="stylesheet" href="./songs/Test/1.mp3">
-
-    <style>
-
-    </style>
 </head>
 
 <body>
@@ -38,8 +33,11 @@
             <div class="volume"><i class="fa fa-volume-up"><p class="curr-volume">2</p></i></div>
         </div>
     </div>
-    <div><i class="fa fa-angle-double-down" title="There is more below!"></i></div>
-    <div id="playlist"></div>
+    <div class="body-playlist-container">
+        <div class="top"></div>
+        <div id="playlist"></div>
+        <div class="bottom"></div>
+    </div>
     <div><a href="#"><button class="back-to-top"><i class="fa fa-arrow-up"></i></button></a></div>
 
     <!-- MODAL -->

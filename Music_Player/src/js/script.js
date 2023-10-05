@@ -7,7 +7,7 @@ let object = [
         current_time: 0,
         isPlaying: false,
         volume: 0.2,
-        alert_read: false,
+        // alert_read: false,
         // repeat: 0,
         // shuffle: false
     }
@@ -44,20 +44,20 @@ window.onload = function localStorageFetch() {
         localStorage.volume = object[0].volume;
     }
 
-    if (localStorage.alert_read) {
-        object[0].alert_read = localStorage.alert_read;
-    } else {
-        localStorage.alert_read = object[0].alert_read;
-    }
+    // if (localStorage.alert_read) {
+    //     object[0].alert_read = localStorage.alert_read;
+    // } else {
+    //     localStorage.alert_read = object[0].alert_read;
+    // }
 
     generatePlaylist();
 
 }
 
-if (localStorage.alert_read) {
-    alert.style.visibility = "hidden";
-    alert_message.style.display = "none";
-} 
+// if (localStorage.alert_read) {
+//     alert.style.visibility = "hidden";
+//     alert_message.style.display = "none";
+// } 
 
 
 // DETAILS 
@@ -105,12 +105,12 @@ function repeatAlgo() {
     const repeat_icon = document.querySelector(".repeat");
     const repeat_status = document.querySelector(".repeat-status");
     repeat_icon.addEventListener("click", toggleRepeat);
-    
+
     let repeat = 0;
     // 0 => No-Repeat
     // 1 => Repeat-One
     // 2 => Repeat-All
-    
+
     function toggleRepeat() {
         switch (repeat) {
             case 0:
@@ -166,6 +166,8 @@ function loadSong() {
     updateDetails();
 
     curr_track.addEventListener("ended", autoNext);
+    highlightButton();
+
 }
 
 
@@ -180,6 +182,23 @@ function playPause() {
         localStorage.isPlaying = true;
         setInterval(progressTrack, 1000);
         curr_track.play();
+    }
+}
+
+function highlightButton() {
+    const highlights = document.querySelectorAll(".playlist .btn-container");
+    const body_highlights = document.querySelectorAll("body #playlist button");
+
+    for (let i = 0; i < highlights.length; i++) {
+        if (i == track_index) {
+            highlights[i].classList.remove("highlight");
+            highlights[i].classList.add("highlight");
+            body_highlights[i].classList.remove("highlight");
+            body_highlights[i].classList.add("highlight");
+        } else {
+            highlights[i].classList.remove("highlight");
+            body_highlights[i].classList.remove("highlight");
+        }
     }
 }
 
@@ -223,7 +242,7 @@ function shuffleAlgo() {
     const shuffle_icon = document.querySelector(".shuffle");
     let shuffle = false;
     shuffle_icon.addEventListener("click", toggleShuffle);
-    
+
     function toggleShuffle() {
         switch (shuffle) {
             case false:
@@ -366,6 +385,9 @@ function generateList(category) {
                 button1.setAttribute("class", "name");
                 button1.onclick = function () {
                     addToPlaylist(y);
+                    track_index = object[0].playlist.length - 1;
+                    localStorage.track_index = track_index;
+                    playPause();
                 }
 
                 const button2 = document.createElement("button");
@@ -391,7 +413,7 @@ let body_playlist = document.querySelector("#playlist");
 function addToPlaylist(category) {
     clearAllButtons(body_playlist);
     clearAllButtons(modal_playlist);
-    
+
     // if adding just a song object to playlist 
     if (typeof (category) == "object") {
         object[0].playlist.push(category);
@@ -408,6 +430,7 @@ function addToPlaylist(category) {
         })
     }
     generatePlaylist();
+    highlightButton();
 }
 
 
@@ -418,8 +441,9 @@ function generatePlaylist() {
 }
 
 function removeFromPlaylist(song, index) {
-    console.log("x: " + song.name + " index: " + index);
+    console.log(song.name + " : " + index);
     object[0].playlist.splice(index, 1);
+    localStorage.playlist = JSON.stringify(object[0].playlist);
 
     clearAllButtons(body_playlist);
     clearAllButtons(modal_playlist);
@@ -453,12 +477,17 @@ function createClearPlaylistButton() {
 }
 
 function createPlaylistButtons() {
-    (JSON.parse(localStorage.playlist)).forEach(x => {
+    object[0].playlist.forEach(x => {
         const div = document.createElement("div");
         div.setAttribute("class", "btn-container");
 
         const button1 = document.createElement("button");
         button1.textContent = x.name;
+        button1.onclick = function () {
+            track_index = object[0].playlist.indexOf(x);
+            localStorage.track_index = track_index;
+            playPause();
+        }
         button1.setAttribute("type", "button");
         button1.setAttribute("class", "name");
 
@@ -476,6 +505,11 @@ function createPlaylistButtons() {
         button3.textContent = x.name;
         button3.setAttribute("class", "name");
         button3.style.textAlign = "center";
+        button3.onclick = function () {
+            track_index = object[0].playlist.indexOf(x);
+            localStorage.track_index = track_index;
+            playPause();
+        }
         body_playlist.appendChild(button3);
     })
 }
@@ -488,8 +522,7 @@ function clearPlaylist() {
         localStorage.playlist = [];
         clearAllButtons(modal_playlist);
         clearAllButtons(body_playlist);
-        createPlaylistButtons();
-    } 
+    }
 }
 
 

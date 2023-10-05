@@ -25,7 +25,8 @@ body {
 body,
 .modal-content,
 .list,
-#myModal .playlist {
+#myModal .playlist,
+.body-playlist-container {
     overflow: scroll;
     scroll-behavior: smooth;
     scrollbar-width: none;
@@ -34,16 +35,17 @@ body,
 body::-webkit-scrollbar,
 .modal-content::-webkit-scrollbar,
 .list::-webkit-scrollbar,
-#myModal .playlist::-webkit-scrollbar {
+#myModal .playlist::-webkit-scrollbar,
+.body-playlist-container::-webkit-scrollbar {
     display: none;
 }
 
 .container {
-    width: 475px;
-    height: 650px;
+    width: 575px;
+    height: 800px;
     border-radius: 8px;
     box-shadow: 3px 3px 10px 3px #000000aa;
-    margin: 0;
+    margin: 10px 0;
 }
 
 .image-container {
@@ -112,9 +114,9 @@ body::-webkit-scrollbar,
 .timer {
     display: flex;
     justify-content: space-between;
-    font-size: small;
+    font-size: 15px;
     padding: 0 3px;
-    margin-top: -16px;
+    margin-top: -17px;
     font-weight: bolder;
 }
 
@@ -137,7 +139,7 @@ body::-webkit-scrollbar,
 
 
 .menu {
-    font-size: 15px;
+    font-size: 20px;
     color: #333333;
 }
 
@@ -150,7 +152,7 @@ body::-webkit-scrollbar,
 }
 
 .repeat {
-    font-size: 15px;
+    font-size: 20px;
     color: #333333;
     width: 20px;
 }
@@ -164,31 +166,31 @@ body::-webkit-scrollbar,
 
 
 .prev {
-    font-size: 36px;
+    font-size: 45px;
 }
 
 .play-pause {
-    font-size: 60px;
+    font-size: 70px;
 }
 
 .next {
-    font-size: 36px;
+    font-size: 45px;
 }
 
 .shuffle {
-    font-size: 15px;
+    font-size: 20px;
     color: #333333;
 
 }
 
 .volume {
-    font-size: 15px;
+    font-size: 20px;
     width: 30px;
     color: #333333;
 }
 
 .volume p {
-    font-size: 14px;
+    font-size: 20px;
     display: inline;
     /* margin-left: 1px; */
     padding-right: 1px;
@@ -198,7 +200,7 @@ body::-webkit-scrollbar,
     width: 100%;
     height: 100%;
     position: fixed;
-    z-index: 1;
+    z-index: 99;
     top: 0;
     left: 0;
     background-color: #33333391;
@@ -312,7 +314,7 @@ body::-webkit-scrollbar,
 
 .list {
     width: 100%;
-    height: 80vh;
+    height: 85vh;
     overflow: scroll;
     scroll-behavior: smooth;
     scrollbar-width: thin;
@@ -328,26 +330,53 @@ body::-webkit-scrollbar,
     justify-content: center;
 }
 
+.body-playlist-container {
+    width: 575px;
+    max-height: 400px;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
 
+/* .top{
+    width: 100%;
+    height: 30px;
+    background: linear-gradient(rgb(255, 255, 255), rgba(255, 255, 255, 0.637), rgba(255, 255, 255, 0.384));
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    box-shadow: 0 5px 10px 3px #ffffffaa;
+} */
 
-body>#playlist {
-    width: 475px;
+/* .bottom{
+    width: 100%;
+    height: 30px;
+    background: linear-gradient(rgb(255, 255, 255, 0.384), rgba(255, 255, 255, 0.637), rgba(255, 255, 255));
+    position: sticky;
+    bottom: 0;
+    z-index: 90;
+    box-shadow: 0 3px 0 3px white;
+} */
+
+body #playlist {
+    width: 100%;
     height: fit-content;
     display: flex;
     flex-direction: column;
     align-items: center;
-
+    position: relative;
+    top: 0;
 }
 
-body>#playlist>button {
-    width: 99%;
+body #playlist button {
+
     margin: 2px 0;
-    color: rgb(51, 51, 51);
+    color: rgb(0, 0, 0);
     border: none;
     padding: 3px 15px;
 }
 
-body>#playlist>button:hover {
+body #playlist button:hover {
     background-color: #191970;
     border-radius: 20px;
     color: #ffffff;
@@ -358,7 +387,7 @@ body>#playlist>button:hover {
 #myModal .playlist {
     border: 1px solid rgba(255, 255, 255, 0.192);
     width: 35%;
-    height: 90vh;
+    height: 92vh;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -370,6 +399,11 @@ body>#playlist>button:hover {
 #myModal .playlist>.btn-container {
     width: 90%;
     justify-content: center;
+}
+
+.highlight {
+    background-color: #538fffee;
+    border-radius: 15px;
 }
 
 
@@ -395,8 +429,8 @@ body>#playlist>button:hover {
     font-size: 30px;
     cursor: pointer;
     position: fixed;
-    right: 50px;
+    right: 400px;
     bottom: 20px;
-    z-index: 99;
+    z-index: 90;
     display: none;
 }
