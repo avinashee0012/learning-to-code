@@ -237,10 +237,11 @@ function autoNext() {
         localStorage.track_index = track_index;
     } else {
         track_index++;
-        localStorage.isPlaying = false;            localStorage.track_index = track_index;
+            localStorage.track_index = track_index;
     }
 
     loadSong();
+localStorage.isPlaying = false;
     playPause();
 }
 
