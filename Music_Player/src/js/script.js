@@ -3,33 +3,29 @@
 let object = [
     {
         playlist: [],
-        track_index: 0,
-        current_time: 0,
+        track_index: -1,
+        // current_time: 0,
         isPlaying: false,
         volume: 0.2,
+        state: false,
         // alert_read: false,
         // repeat: 0,
         // shuffle: false
     }
 ]
 
+
 window.onload = function localStorageFetch() {
     if (localStorage.playlist) {
         object[0].playlist = JSON.parse(localStorage.playlist);
     } else {
-        localStorage.playlist = object[0].playlist;
+        localStorage.playlist = JSON.stringify(object[0].playlist);
     }
 
     if (localStorage.track_index && (localStorage.track_index != NaN)) {
         object[0].track_index = localStorage.track_index;
     } else {
         localStorage.track_index = object[0].track_index;
-    }
-
-    if (localStorage.current_time) {
-        object[0].current_time = localStorage.current_time;
-    } else {
-        localStorage.current_time = object[0].current_time;
     }
 
     if (localStorage.isPlaying) {
@@ -44,15 +40,25 @@ window.onload = function localStorageFetch() {
         localStorage.volume = object[0].volume;
     }
 
-    // if (localStorage.alert_read) {
-    //     object[0].alert_read = localStorage.alert_read;
-    // } else {
-    //     localStorage.alert_read = object[0].alert_read;
-    // }
+    if (localStorage.state) {
+        object[0].state = localStorage.state;
+    } else {
+        localStorage.state = object[0].state;
+    }
 
-    generatePlaylist();
+    if (localStorage.state == "false") {
+        localStorage.state = true;
+        location.reload();
+    } else {
+        generatePlaylist();
+        highlightButton();
+        updateDetails();
+    }
 
 }
+
+
+
 
 // if (localStorage.alert_read) {
 //     alert.style.visibility = "hidden";
@@ -67,10 +73,10 @@ window.onload = function localStorageFetch() {
 function updateDetails() {
     try {
         const songName = document.querySelector(".song");
-        songName.textContent = object[0].playlist[track_index].name;
+        songName.textContent = JSON.parse(localStorage.playlist)[track_index].name;
 
         const artistName = document.querySelector(".artist");
-        artistName.textContent = object[0].playlist[track_index].artist;
+        artistName.textContent = JSON.parse(localStorage.playlist)[track_index].artist;
     } catch (error) {
         //passing for now
     }
@@ -145,11 +151,12 @@ function prevSong() {
         localStorage.track_index = track_index;
     }
 
-    if (curr_track.paused) {
+    if (localStorage.isPlaying == "false") {
         loadSong();
     } else {
         loadSong();
-        playPause();
+        localStorage.isPlaying = false;
+        playPause();        
     }
 }
 
@@ -162,17 +169,16 @@ let curr_track = document.createElement('audio');
 let track_index = localStorage.track_index;
 
 function loadSong() {
-    curr_track.src = object[0].playlist[track_index].path;
     updateDetails();
+    curr_track.src = object[0].playlist[track_index].path;
 
     curr_track.addEventListener("ended", autoNext);
     highlightButton();
-
 }
 
 
 function playPause() {
-    if (!curr_track.paused) {
+    if (localStorage.isPlaying == "true") {
         curr_track.pause();
         localStorage.isPlaying = false;
         play_pause.innerHTML = "<i class=\"fa fa-play-circle-o\"></i>";
@@ -215,12 +221,14 @@ function nextSong() {
         localStorage.track_index = track_index;
     }
 
-    if (curr_track.paused) {
+    if (localStorage.isPlaying == "false") {
         loadSong();
     } else {
         loadSong();
-        playPause();
+        localStorage.isPlaying = false;
+        playPause();        
     }
+    
 }
 
 function autoNext() {
@@ -295,16 +303,11 @@ function progressTrack() {
     if (!isNaN(curr_track.duration)) {
 
         // _________PROGRESS:_________
-        let time = Math.floor(100 * curr_track.currentTime / curr_track.duration);
+        let time = Math.floor(100 * curr_track.currentTime / curr_track.duration) + 0.5;
         let time_perc = time + "%";
 
         progress.style.width = time_perc;
         progress.style.background = "linear-gradient(#00f7ffaf, rgb(11, 180, 247), #00f7ffaf)";
-        localStorage.current_time = time;
-
-        function seekTo() {
-            curr_track.currentTime = curr_track.duration * time;
-        }
 
         // _________TIMER:_________
         let current = document.querySelector(".current");
@@ -338,11 +341,19 @@ function progressTrack() {
 // ****************************************************************************************************************************
 // MODAL SECTION:
 
+const modal = document.querySelector("#myModal");
+
+window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+}
 
 // ______________CATEGORY______________
 let category = document.querySelector(".category");
 
 // generate category buttons based on categories available in track_list
+
 track_list.forEach(x => {
     const div = document.createElement("div");
     div.setAttribute("class", "btn-container");
@@ -385,8 +396,10 @@ function generateList(category) {
                 button1.setAttribute("class", "name");
                 button1.onclick = function () {
                     addToPlaylist(y);
+                    object[0].playlist = JSON.parse(localStorage.playlist);
                     track_index = object[0].playlist.length - 1;
                     localStorage.track_index = track_index;
+                    localStorage.isPlaying = false;
                     playPause();
                 }
 
@@ -438,18 +451,28 @@ function addToPlaylist(category) {
 function generatePlaylist() {
     createClearPlaylistButton();
     createPlaylistButtons();
+    highlightButton();
 }
 
 function removeFromPlaylist(song, index) {
-    console.log(song.name + " : " + index);
+    if (index == track_index) {
+        playPause();
+    }
     object[0].playlist.splice(index, 1);
     localStorage.playlist = JSON.stringify(object[0].playlist);
-
     clearAllButtons(body_playlist);
     clearAllButtons(modal_playlist);
 
     createClearPlaylistButton();
     createPlaylistButtons();
+    if (index > track_index) {
+        highlightButton();
+    } else if (index = track_index) {
+        //
+    } else {
+        //
+    }
+
 }
 
 function clearAllButtons(element) {
@@ -486,6 +509,7 @@ function createPlaylistButtons() {
         button1.onclick = function () {
             track_index = object[0].playlist.indexOf(x);
             localStorage.track_index = track_index;
+            localStorage.isPlaying = false;
             playPause();
         }
         button1.setAttribute("type", "button");
@@ -508,6 +532,7 @@ function createPlaylistButtons() {
         button3.onclick = function () {
             track_index = object[0].playlist.indexOf(x);
             localStorage.track_index = track_index;
+            localStorage.isPlaying = false;
             playPause();
         }
         body_playlist.appendChild(button3);
@@ -526,14 +551,5 @@ function clearPlaylist() {
 }
 
 
-const back_to_top = document.querySelector(".back-to-top");
-
-window.onscroll = function () {
-    if (document.body.scrollTop > 40 || document.documentElement.scrollTop > 40) {
-        back_to_top.style.display = "block";
-    } else {
-        back_to_top.style.display = "none";
-    }
-}
-
 curr_volume.textContent = Math.floor(localStorage.volume * 11);
+
