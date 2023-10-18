@@ -4,7 +4,6 @@ let object = [
     {
         playlist: [],
         track_index: -1,
-        // current_time: 0,
         isPlaying: false,
         volume: 0.2,
         state: false,
@@ -180,13 +179,19 @@ function loadSong() {
 function playPause() {
     if (localStorage.isPlaying == "true") {
         curr_track.pause();
+        localStorage.current_time = curr_track.currentTime;
         localStorage.isPlaying = false;
         play_pause.innerHTML = "<i class=\"fa fa-play-circle-o\"></i>";
     } else {
         play_pause.innerHTML = "<i class=\"fa fa-pause-circle-o\"></i>";
-        loadSong();
+        if (localStorage.current_time) {
+            curr_track.currentTime = localStorage.current_time;
+        } else {
+            loadSong();
+        }
+        localStorage.removeItem("current_time");
         localStorage.isPlaying = true;
-        setInterval(progressTrack, 1000);
+        setInterval(progressTrack, 500);
         curr_track.play();
     }
 }
@@ -408,6 +413,7 @@ function generateList(category) {
                     track_index = object[0].playlist.length - 1;
                     localStorage.track_index = track_index;
                     localStorage.isPlaying = false;
+                    localStorage.removeItem("current_time");
                     playPause();
                 }
 
@@ -518,6 +524,7 @@ function createPlaylistButtons() {
             track_index = object[0].playlist.indexOf(x);
             localStorage.track_index = track_index;
             localStorage.isPlaying = false;
+            localStorage.removeItem("current_time");
             playPause();
         }
         button1.setAttribute("type", "button");
@@ -541,6 +548,7 @@ function createPlaylistButtons() {
             track_index = object[0].playlist.indexOf(x);
             localStorage.track_index = track_index;
             localStorage.isPlaying = false;
+            localStorage.removeItem("current_time");
             playPause();
         }
         body_playlist.appendChild(button3);
