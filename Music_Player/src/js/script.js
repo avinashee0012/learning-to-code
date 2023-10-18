@@ -143,6 +143,7 @@ let prev = document.querySelector(".prev");
 prev.addEventListener("click", prevSong);
 
 function prevSong() {
+    localStorage.removeItem("current_time");
     if (track_index == 0) {
         track_index = object[0].playlist.length - 1;
     } else {
@@ -218,6 +219,7 @@ let next = document.querySelector(".next");
 next.addEventListener("click", nextSong);
 
 function nextSong() {
+    localStorage.removeItem("current_time");
     if (track_index == object[0].playlist.length - 1) {
         track_index = 0;
         localStorage.track_index = track_index;
@@ -237,6 +239,7 @@ function nextSong() {
 }
 
 function autoNext() {
+    localStorage.removeItem("current_time");
     if (track_index == object[0].playlist.length - 1) {
         track_index = 0;
         localStorage.track_index = track_index;
@@ -246,7 +249,7 @@ function autoNext() {
     }
 
     loadSong();
-localStorage.isPlaying = false;
+    localStorage.isPlaying = false;
     playPause();
 }
 
