@@ -300,6 +300,13 @@ function volumeChange(event) {
 
 let progress = document.querySelector(".progress");
 
+let progress_bar_div = document.querySelector(".progress-bar");
+
+progress_bar_div.addEventListener("click", (event) => {
+    console.log(curr_track.duration * event.offsetX / progress_bar_div.offsetWidth);
+    curr_track.currentTime = curr_track.duration * event.offsetX / progress_bar_div.offsetWidth;
+})
+
 function progressTrack() {
     if (!isNaN(curr_track.duration)) {
 
