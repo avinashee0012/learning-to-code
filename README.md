@@ -5,7 +5,7 @@
 URL: <a href="./Music_Player/">Music Player</a>
 
 <ul><strong><em>Bugs to fix:</em></strong></ul>
-<li><em>Song starts from start when paused</em></li>
+<li><em>Cant play any other song from playlist when played directly from songs list</em></li>
 <li><em></em></li>
 <li><em></em></li>
 
