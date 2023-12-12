@@ -1,0 +1,17 @@
+.modifier {
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+    width: 25%;
+    margin: 0 5px;
+    justify-content: center;
+}
+
+.modifier i {
+    font-size: 25px;
+}
+
+.modifier i:hover {
+    color: #00539C;
+    cursor: pointer;
+}

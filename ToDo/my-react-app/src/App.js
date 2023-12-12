@@ -1,12 +1,22 @@
 import './App.css';
-import Container from './Container';
+import data from './Content/data.js';
+import AddTasks from './Design/AddTasks.js';
+import AlertBox from './Design/AlertBox.js';
+import Items from './Design/Items.js';
 
 function App() {
+
+
   return (
     <div className="App">
-      <Container />
+      <AddTasks />
+      <AlertBox />
+      <div className='list'>
+        {data.map((item) => <Items key={item.id} item={item} />)}
+      </div>
     </div>
   );
-}
+};
+
 
 export default App;

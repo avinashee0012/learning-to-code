@@ -1,0 +1,14 @@
+.add_tasks {
+    border: 3px solid  #00539CAA;
+    border-radius: 4px;
+    height: 50px;
+    font-size: 20px;
+    margin: 15px 0;
+    margin-right: 8px;
+    padding: 10px 5px;
+    font-size: 15px;
+}
+
+.add_tasks:focus {
+    outline: none;    
+}

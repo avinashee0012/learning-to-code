@@ -1,0 +1,7 @@
+.alert-box{
+    text-align: center;
+    color: green;
+    height: fit-content;
+    padding: 3px;
+    display: none;
+}
